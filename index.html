@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mindful Cadence</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="theme-color" content="#3B82F6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg:#f3f5fa;--card:#fff;--tx:#191c20;--mut:#6b7280;--line:#e4e7ee;--in:#f3f5fa;
+--blue:#3B82F6;--blue-bg:#e6efff;--green:#10B981;--green-bg:#dcf7ec;--orange:#F97316;--orange-bg:#ffeadb;--gray:#71717A;--gray-bg:#ececef;--dark:#191c20;--onDark:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1218;--card:#181c25;--tx:#eef0f5;--mut:#9aa1af;--line:#272c38;--in:#0f1218;
+--blue-bg:#1b2b4a;--green-bg:#123a2d;--orange-bg:#432612;--gray-bg:#2a2d35;--dark:#eef0f5;--onDark:#111}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:'Plus Jakarta Sans','Noto Sans Thai',system-ui,sans-serif}
+body{padding-top:env(safe-area-inset-top,0px)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+#app{max-width:520px;margin:0 auto;padding:16px 16px 150px}
+.hd{display:flex;align-items:center;justify-content:space-between;margin:6px 0 14px}
+h1{font-size:26px;font-weight:800;margin:0;letter-spacing:-.4px}
+h2{margin:0 0 12px;font-size:20px}h3{margin:6px 0 2px;font-size:17px}
+.nav{display:flex;gap:6px}.nav button{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:18px}
+.card{background:var(--card);border-radius:20px;padding:14px 16px;margin-bottom:12px;border:1px solid var(--line)}
+.bar{height:7px;border-radius:9px;background:var(--in);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:9px;transition:width .4s}
+.mut{color:var(--mut);font-size:13px}
+.sum{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.sum div{background:var(--in);border-radius:14px;padding:10px;font-size:12px;color:var(--mut)}.sum b{display:block;font-size:17px;color:var(--tx)}
+.t-study{--c:var(--blue);--cb:var(--blue-bg)}.t-meal{--c:var(--orange);--cb:var(--orange-bg)}
+.t-workout{--c:var(--green);--cb:var(--green-bg)}.t-other{--c:var(--gray);--cb:var(--gray-bg)}
+.blk{display:flex;gap:10px;margin-bottom:12px;position:relative}
+.blk:before{content:"";position:absolute;left:23px;top:22px;bottom:-16px;width:2px;background:var(--line)}
+.blk:last-child:before{display:none}
+.tcol{width:48px;flex:none;font-size:12px;font-weight:700;color:var(--c);padding-top:12px;text-align:left;position:relative;z-index:1}
+.bc{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:18px;padding:12px 14px}
+.row{display:flex;align-items:center;gap:8px}
+.tag{background:var(--cb);color:var(--c);border-radius:99px;padding:3px 10px;font-size:12px;font-weight:700}
+.tr{flex:1;font-size:12px;color:var(--mut)}
+.ck{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);color:#fff;font-weight:800}
+.done .ck{background:var(--c);border-color:var(--c)}
+.done h3{text-decoration:line-through}.done .bc{opacity:.6}
+.bc p{margin:0;font-size:13px;color:var(--mut);white-space:pre-line}
+details{margin-top:8px}summary{font-size:13px;font-weight:700;color:var(--c);cursor:pointer}
+.ex{display:flex;justify-content:space-between;background:var(--in);border-radius:12px;padding:8px 10px;margin-top:6px;font-size:13px}
+.empty{text-align:center;color:var(--mut);padding:30px 0}
+.fab{position:fixed;right:max(16px,calc(50% - 244px));bottom:calc(84px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:50%;background:var(--blue);color:#fff;font-size:30px;box-shadow:0 8px 20px rgba(59,130,246,.45);z-index:5}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));z-index:6}
+.tabs button{flex:1;max-width:160px;padding:8px;border-radius:99px;font-size:12px;font-weight:700;color:var(--mut)}
+.tabs button.on{background:var(--blue);color:#fff}
+#sh{position:fixed;inset:0;display:none;z-index:20}#sh.open{display:block}
+.sb{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.sp{position:absolute;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;background:var(--card);border-radius:26px 26px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));max-height:92%;overflow-y:auto}
+label{display:block;font-size:12px;font-weight:700;color:var(--mut);margin:10px 0 0}
+input,select,textarea{width:100%;background:var(--in);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:4px;font-size:15px}
+textarea{min-height:60px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.chip{background:var(--cb);color:var(--c);border-radius:14px;padding:10px 0;font-size:12px;font-weight:700;border:2px solid transparent}
+.chip.on{border-color:var(--c);background:var(--c);color:#fff}
+.qd{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.pill{padding:6px 12px;border-radius:99px;background:var(--in);border:1px solid var(--line);font-size:13px;font-weight:600}
+.pill.on{background:var(--dark);color:var(--onDark)}
+.exr{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 28px;gap:4px;margin-top:6px;align-items:center}
+.exr input{padding:8px 6px;margin:0;font-size:14px;text-align:center}.exr input:first-child{text-align:left}
+.exr.h{font-size:11px;color:var(--mut);font-weight:700;text-align:center}
+.acts{display:flex;gap:8px;margin-top:16px}
+.acts button{flex:1;padding:13px;border-radius:99px;font-weight:700}
+.pri{background:var(--dark);color:var(--onDark)}.ghost{background:var(--in);border:1px solid var(--line)}.danger{background:#fee2e2;color:#b91c1c}
+.sm{padding:6px 12px;border-radius:99px;background:var(--in);border:1px solid var(--line);font-size:12px;font-weight:700}
+.dots{display:flex;gap:4px;margin:8px 0 4px}.dots i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.cur{border:2px solid var(--blue)}
+#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--dark);color:var(--onDark);padding:10px 18px;border-radius:99px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:30}
+#toast.on{opacity:1}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<button class="fab" id="fab" aria-label="Add activity" onclick="add()">+</button>
+<nav class="tabs" id="tabs">
+<button data-t="today" onclick="setTab('today')">📅 Today</button>
+<button data-t="week" onclick="setTab('week')">🗓️ Week</button>
+<button data-t="tpl" onclick="setTab('tpl')">🔖 Templates</button>
+</nav>
+<div id="sh"></div><div id="toast"></div>
+<input type="file" id="imp" accept="application/json" hidden>
+<script>
+const K='mindful-cadence-v1',$=s=>document.querySelector(s);
+let S;try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
+if(!S||!S.days)S={days:{},templates:[]};
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){toast('Cannot save on this browser')}};
+const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const D=s=>new Date(s+'T00:00');
+let cur=iso(new Date()),tab='today',draft=null;
+const T={study:{i:'📚',n:'Study'},meal:{i:'🍚',n:'Meal'},workout:{i:'🏋️',n:'Workout'},other:{i:'📝',n:'Other'}};
+const tm=s=>{const[h,m]=(s||'0:0').split(':').map(Number);return h*60+m};
+const ts=m=>{m=(m%1440+1440)%1440;return String(m/60|0).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const get=d=>(S.days[d]||[]).slice().sort((a,b)=>tm(a.start)-tm(b.start));
+const clone=a=>JSON.parse(JSON.stringify(a)).map(b=>({...b,id:uid(),done:false}));
+const sumBy=(bs,f)=>bs.filter(f).reduce((a,b)=>a+b.dur,0);
+const hr=m=>(m/60).toFixed(1).replace(/\.0$/,'')+'h';
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)}
+
+function sub(b){
+ if(b.type==='study')return[b.book,b.chapter].filter(Boolean).join(' · ');
+ if(b.type==='workout'&&b.kind==='cardio')return[b.cardioType,b.dur+' min',b.intensity].filter(Boolean).join(' · ');
+ return b.notes||''}
+function card(b){
+ let ex='';
+ if(b.type==='workout'&&b.kind!=='cardio'&&b.exercises.length)
+  ex=`<details onclick="event.stopPropagation()"><summary>${b.exercises.length} exercises</summary>${b.exercises.map(e=>`<div class=ex><b>${esc(e.name)}</b><span>${e.sets}×${e.reps} · ${e.kg} kg${e.rest?' · rest '+e.rest+'s':''}</span></div>`).join('')}</details>`;
+ return `<div class="blk t-${b.type}${b.done?' done':''}"><div class=tcol>${b.start}</div>
+ <div class=bc onclick="edit('${b.id}')"><div class=row><span class=tag>${T[b.type].i} ${T[b.type].n}</span><span class=tr>${b.start}–${ts(tm(b.start)+b.dur)}</span>
+ <button class=ck aria-label="Mark done" onclick="event.stopPropagation();tog('${b.id}')">${b.done?'✓':''}</button></div>
+ <h3>${esc(b.title)}</h3><p>${esc(sub(b))}</p>${ex}</div></div>`}
+
+function today(){
+ const bs=get(cur),n=bs.filter(b=>b.done).length,pct=bs.length?n/bs.length*100:0;
+ return `<div class=hd><h1>${D(cur).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}</h1>
+ <div class=nav><button aria-label="Previous day" onclick="go(-1)">‹</button><button aria-label="Today" onclick="cur=iso(new Date());draw()">•</button><button aria-label="Next day" onclick="go(1)">›</button></div></div>
+ <div class=card><b>${n} of ${bs.length} tasks done</b><div class=bar><i style="width:${pct}%"></i></div></div>
+ ${bs.map(card).join('')||'<p class=empty>Nothing planned yet.<br>Tap + to add your first activity.</p>'}
+ <div class=card><b>Daily summary</b><div class=sum>
+ <div>Study<b>${hr(sumBy(bs,b=>b.type==='study'))}</b></div>
+ <div>Workout<b>${sumBy(bs,b=>b.type==='workout')} min</b></div>
+ <div>Done<b>${n}/${bs.length}</b></div></div></div>`}
+
+function week(){
+ const d0=D(cur),mon=new Date(d0.getTime()-((d0.getDay()+6)%7)*864e5);
+ const days=[...Array(7)].map((_,i)=>iso(new Date(mon.getTime()+i*864e5)));
+ const all=days.flatMap(d=>get(d)),tot=all.length,dn=all.filter(b=>b.done).length;
+ const wd=days.filter(d=>get(d).some(b=>b.type==='workout')).length;
+ return `<div class=hd><h1>This week</h1><div class=nav><button aria-label="Previous week" onclick="go(-7)">‹</button><button aria-label="Next week" onclick="go(7)">›</button></div></div>
+ <div class=card><b>Weekly summary</b><div class=sum><div>Study<b>${hr(sumBy(all,b=>b.type==='study'))}</b></div><div>Workout days<b>${wd}</b></div><div>Completed<b>${tot?Math.round(dn/tot*100):0}%</b></div></div></div>
+ ${days.map(d=>{const bs=get(d),k=bs.filter(b=>b.done).length;
+ return `<div class="card${d===cur?' cur':''}" onclick="cur='${d}';setTab('today')"><div class=row><b style="flex:1">${D(d).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}</b>
+ <button class=sm onclick="event.stopPropagation();copyTo('${d}')">Copy plan</button></div>
+ <div class=dots>${bs.map(b=>`<i class="t-${b.type}"></i>`).join('')||'<span class=mut>Free day</span>'}</div>
+ <span class=mut>Study ${hr(sumBy(bs,b=>b.type==='study'))} · Workout ${sumBy(bs,b=>b.type==='workout')} min · Done ${k}/${bs.length}</span></div>`}).join('')}`}
+
+function tpl(){
+ return `<div class=hd><h1>Templates</h1></div>
+ <div class=card><b>Save a routine</b><p class=mut>Save the plan of the selected day (${cur}) to reuse later.</p><button class=sm onclick="saveTpl()">Save this day as template</button></div>
+ ${S.templates.map((t,i)=>`<div class=card><div class=row><b style="flex:1">${esc(t.name)}</b><span class=mut>${t.blocks.length} blocks</span></div>
+ <div class=acts style="margin-top:10px"><button class=ghost onclick="delTpl(${i})">Delete</button><button class=pri onclick="applyTpl(${i})">Add to ${cur}</button></div></div>`).join('')||'<p class=empty>No templates yet.</p>'}
+ <div class=card><b>Backup</b><p class=mut>Data is stored only in this browser. Export a copy now and then.</p>
+ <div class=acts style="margin-top:8px"><button class=ghost onclick="exp()">Export</button><button class=ghost onclick="$('#imp').click()">Import</button></div></div>`}
+
+function draw(){
+ $('#app').innerHTML=tab==='today'?today():tab==='week'?week():tpl();
+ document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+ $('#fab').style.display=tab==='today'?'block':'none'}
+function setTab(t){tab=t;draw();scrollTo(0,0)}
+function go(n){cur=iso(new Date(D(cur).getTime()+n*864e5));draw()}
+function tog(id){const b=S.days[cur].find(x=>x.id===id);b.done=!b.done;save();draw()}
+
+/* sheet */
+const openS=()=>$('#sh').classList.add('open'),closeS=()=>$('#sh').classList.remove('open');
+function add(){draft={id:uid(),type:'study',title:'',start:'08:00',dur:60,done:false,book:'',chapter:'',kind:'weights',exercises:[],cardioType:'Running',intensity:'Medium',notes:'',_new:1};sheet()}
+function edit(id){draft=JSON.parse(JSON.stringify(S.days[cur].find(b=>b.id===id)));sheet()}
+function extra(d){
+ if(d.type==='study')return `<div class=two><label>Book / subject<input value="${esc(d.book)}" oninput="draft.book=this.value"></label><label>Chapter / pages<input value="${esc(d.chapter)}" oninput="draft.chapter=this.value"></label></div>`;
+ if(d.type!=='workout')return '';
+ const tg=`<div class=qd style="margin-top:12px">${['weights','cardio'].map(k=>`<button class="pill${d.kind===k?' on':''}" onclick="draft.kind='${k}';sheet()">${k==='weights'?'Weights':'Cardio'}</button>`).join('')}</div>`;
+ if(d.kind==='cardio')return tg+`<div class=two><label>Type<select onchange="draft.cardioType=this.value">${['Running','Cycling','Jump rope','Swimming','Walking'].map(o=>`<option${o===d.cardioType?' selected':''}>${o}</option>`).join('')}</select></label>
+ <label>Intensity<select onchange="draft.intensity=this.value">${['Low','Medium','High'].map(o=>`<option${o===d.intensity?' selected':''}>${o}</option>`).join('')}</select></label></div>`;
+ return tg+`<div class="exr h"><span style="text-align:left">Exercise</span><span>Sets</span><span>Reps</span><span>Kg</span><span>Rest s</span><span></span></div>`+
+ d.exercises.map((e,i)=>`<div class=exr><input placeholder="Name" value="${esc(e.name)}" oninput="draft.exercises[${i}].name=this.value">
+ ${['sets','reps','kg','rest'].map(f=>`<input type=number inputmode=decimal value="${e[f]}" oninput="draft.exercises[${i}].${f}=+this.value||0">`).join('')}
+ <button aria-label="Remove" onclick="draft.exercises.splice(${i},1);sheet()">✕</button></div>`).join('')+
+ `<button class=sm style="margin-top:8px" onclick="draft.exercises.push({name:'',sets:3,reps:10,kg:0,rest:60});sheet()">+ Add exercise</button>`}
+function sheet(){const d=draft;
+ $('#sh').innerHTML=`<div class=sb onclick=closeS()></div><div class=sp><h2>${d._new?'Add':'Edit'} activity</h2>
+ <div class=chips>${Object.keys(T).map(k=>`<button class="chip t-${k}${d.type===k?' on':''}" onclick="draft.type='${k}';sheet()">${T[k].i}<br>${T[k].n}</button>`).join('')}</div>
+ <label>Title<input value="${esc(d.title)}" placeholder="e.g. Read economics" oninput="draft.title=this.value"></label>
+ <div class=two><label>Start time<input type=time value="${d.start}" oninput="draft.start=this.value||'08:00'"></label><label>Duration (min)<input type=number inputmode=numeric value="${d.dur}" oninput="draft.dur=+this.value||0"></label></div>
+ <div class=qd>${[30,45,60,120].map(m=>`<button class="pill${d.dur===m?' on':''}" onclick="draft.dur=${m};sheet()">${m<60?m+' min':m/60+'h'}</button>`).join('')}</div>
+ ${extra(d)}<label>Notes<textarea oninput="draft.notes=this.value">${esc(d.notes)}</textarea></label>
+ <div class=acts>${d._new?'':'<button class=danger onclick=del()>Delete</button>'}<button class=ghost onclick=closeS()>Cancel</button><button class=pri onclick=saveB()>Save activity</button></div></div>`;openS()}
+function saveB(){
+ const d=draft;if(!d.title.trim())d.title=T[d.type].n;if(d.dur<5)d.dur=5;delete d._new;
+ const a=S.days[cur]||(S.days[cur]=[]),i=a.findIndex(b=>b.id===d.id);
+ i<0?a.push(d):a[i]=d;save();closeS();draw()}
+function del(){S.days[cur]=S.days[cur].filter(b=>b.id!==draft.id);save();closeS();draw()}
+
+/* copy, templates, backup */
+function copyTo(src){
+ const next=iso(new Date(D(src).getTime()+864e5));
+ $('#sh').innerHTML=`<div class=sb onclick=closeS()></div><div class=sp><h2>Copy plan</h2><p class=mut>Copy all activities from ${src} to:</p>
+ <input type=date id=cd value="${next}"><div class=acts><button class=ghost onclick=closeS()>Cancel</button><button class=pri onclick="doCopy('${src}')">Copy plan</button></div></div>`;openS()}
+function doCopy(src){const t=$('#cd').value;if(!t)return;S.days[t]=(S.days[t]||[]).concat(clone(get(src)));save();closeS();toast('Plan copied to '+t);draw()}
+function saveTpl(){const bs=get(cur);if(!bs.length)return toast('This day has no activities');
+ const n=prompt('Template name');if(!n)return;S.templates.push({name:n,blocks:clone(bs)});save();toast('Template saved');draw()}
+function applyTpl(i){S.days[cur]=(S.days[cur]||[]).concat(clone(S.templates[i].blocks));save();toast('Added to '+cur);setTab('today')}
+function delTpl(i){if(confirm('Delete this template?')){S.templates.splice(i,1);save();draw()}}
+function exp(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='planner-backup-'+iso(new Date())+'.json';a.click()}
+$('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{try{const j=JSON.parse(r.result);if(!j.days)throw 0;if(confirm('Replace current data with this backup?')){S={days:j.days,templates:j.templates||[]};save();draw();toast('Imported')}}catch(x){toast('Invalid backup file')}};r.readAsText(f);e.target.value=''};
+draw();
+</script>
+</body>
+</html>
